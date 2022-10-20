@@ -621,16 +621,19 @@ function woocommerce_moldovaagroindbank_init() {
 				'defaults' => [
 					'verify'  => true,
 					'cert'    => $this->maib_pcert,
-					'ssl_key' => [$this->maib_key, $this->maib_key_password],
-					'config'  => [
-						'curl'  => [
-							CURLOPT_SSL_VERIFYHOST => true,
-							CURLOPT_SSL_VERIFYPEER => true,
-							CURLOPT_INTERFACE => $_SERVER['SERVER_ADDR'],
-						]
-					]
+					'ssl_key' => [$this->maib_key, $this->maib_key_password]
 				]
 			];
+
+			if (defined('MAIB_CURLOPT_INTERFACE')) {
+				$options['defaults']['config'] = [
+				    'curl'  => [
+					CURLOPT_SSL_VERIFYHOST => true,
+					CURLOPT_SSL_VERIFYPEER => true,
+					CURLOPT_INTERFACE => MAIB_CURLOPT_INTERFACE,
+				    ]
+				];
+			}
 
 			#region Init Client
 			$guzzleClient = new Client($options);
